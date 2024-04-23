@@ -14,15 +14,31 @@ interface ProductState {
   products: Product[];
 }
 
-const storedProducts = localStorage.getItem("cart");
 let parsedProducts = [];
-if (storedProducts) {
-  try {
+if (typeof window !== "undefined") {
+  // Code that uses localStorage
+  const storedProducts = localStorage.getItem("cart");
+  if (storedProducts) {
     parsedProducts = JSON.parse(storedProducts);
-  } catch (error) {
-    console.error("Error parsing JSON:", error);
+    try {
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+    }
   }
+  // Rest of your code that uses localStorage
+} else {
+  // Fallback for when localStorage is not available
 }
+
+// const storedProducts = localStorage.getItem("cart");
+// let parsedProducts = [];
+// if (storedProducts) {
+//   try {
+//     parsedProducts = JSON.parse(storedProducts);
+//   } catch (error) {
+//     console.error("Error parsing JSON:", error);
+//   }
+// }
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -38,6 +54,7 @@ export const cartSlice = createSlice({
       } else {
         state.push(productClone);
       }
+
       localStorage.setItem("cart", JSON.stringify(state));
     },
     removeFromCart: (state, action) => {
